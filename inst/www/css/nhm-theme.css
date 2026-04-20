@@ -273,8 +273,7 @@ html, body {
   border: 1px solid var(--nhm-muted) !important;
   color: var(--nhm-text) !important;
   border-radius: 6px !important;
-  z-index: 10;
-}
+  z-index: 9999 !important;
 }
 
 .form-control:focus {
@@ -299,10 +298,9 @@ html, body {
   color: var(--nhm-deep) !important;
 }
 
-/* Ensure selectize wrapper sits above sibling controls */
+/* Ensure selectize wrapper does not trap dropdown stacking context */
 .form-group:has(.selectize-control) {
   position: relative;
-  z-index: 10;
 }
 
 /* ---------- Slider inputs ---------- */

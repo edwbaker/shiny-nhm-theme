@@ -98,6 +98,43 @@ nhm_grid <- function(nx = NULL, ny = nx, col = NULL, lty = 1) {
   grid(nx = nx, ny = ny, col = col %||% cols$border, lty = lty)
 }
 
+#' Map numeric values to NHM theme colours
+#'
+#' Takes a numeric vector and returns a character vector of hex colours
+#' interpolated across an NHM-themed colour ramp. Useful for colouring
+#' markers on maps or points on plots by a continuous variable.
+#'
+#' @param x Numeric vector of values to map.
+#' @param colours Character vector of colours to interpolate. Defaults
+#'   to a ramp from cyan through lime to pink.
+#' @param limits Length-2 numeric vector giving the value range. Values
+#'   outside this range are clamped. Defaults to \code{range(x, na.rm = TRUE)}.
+#' @param n Number of interpolation steps (default 256).
+#' @param na_colour Colour to use for \code{NA} values.
+#' @param palette Character. Passed to \code{\link{nhm_colours}} when
+#'   using the default colour ramp.
+#' @return A character vector of hex colour strings the same length as
+#'   \code{x}.
+#' @importFrom grDevices colorRampPalette
+#' @export
+nhm_colour_ramp <- function(x, colours = NULL, limits = NULL,
+                            n = 256, na_colour = "#444444",
+                            palette = "default") {
+  cols <- nhm_colours(palette)
+  if (is.null(colours)) {
+    colours <- c(cols$cyan, cols$lime, cols$pink)
+  }
+  if (is.null(limits)) limits <- range(x, na.rm = TRUE)
+
+  ramp <- colorRampPalette(colours)(n)
+  x_clamped <- pmin(pmax(x, limits[1]), limits[2])
+  idx <- (x_clamped - limits[1]) / max(limits[2] - limits[1], 1e-10)
+  idx <- pmax(1L, ceiling(idx * (n - 1)) + 1L)
+  result <- ramp[idx]
+  result[is.na(x)] <- na_colour
+  result
+}
+
 #' NHM-themed legend
 #'
 #' A convenience wrapper around \code{\link[graphics]{legend}} pre-filled
