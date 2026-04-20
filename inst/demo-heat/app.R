@@ -141,7 +141,7 @@ ui <- nhm_page(
         shiny::column(
           3,
           nhm_panel(
-            title = "Fly-to Demo",
+            title = "Measurement Locations",
             shiny::tags$p(
               style = paste0("color:", cols$muted, ";"),
               "Zoom between three views: the whole world, the United",
