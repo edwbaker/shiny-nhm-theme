@@ -1,0 +1,1209 @@
+/* ============================================================
+   shinynhm — NHM Shiny Theme
+   Inspired by the NHM Urban Heat Island dashboard
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+/* ---------- CSS Custom Properties (NHM palette) ---------- */
+:root {
+  --nhm-deep:          #290340;
+  --nhm-purple:        #3a0a55;
+  --nhm-card:          #35104a;
+  --nhm-card-hover:    #4a2668;
+  --nhm-cyan:          #0AEDF6;
+  --nhm-lime:          #C8E64A;
+  --nhm-pink:          #F0A0D0;
+  --nhm-blue:          #0E17F8;
+  --nhm-brown:         #8F7E76;
+  --nhm-text:          #ede8f0;
+  --nhm-muted:         #a89bb3;
+  --nhm-border:        #4a2668;
+  --nhm-input:         #4a2668;
+  --nhm-success:       #C8E64A;
+  --nhm-danger:        #f07060;
+  --nhm-warning:       #f39c12;
+  --nhm-radius:        16px;
+  --nhm-shadow:        0 4px 20px rgba(0, 0, 0, 0.4);
+  --nhm-font:          "DM Sans", -apple-system, BlinkMacSystemFont,
+                       "Segoe UI", Roboto, sans-serif;
+}
+
+/* ---------- Base ---------- */
+html, body {
+  background-color: var(--nhm-deep) !important;
+  color: var(--nhm-text) !important;
+  font-family: var(--nhm-font);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* ---------- NHM Header / Title Bar ---------- */
+.nhm-header {
+  background: var(--nhm-purple);
+  border-bottom: 2px solid var(--nhm-cyan);
+  padding: 18px 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 100;
+}
+
+.nhm-header-logo {
+  height: 55px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.nhm-header-text {
+  flex: 1;
+  min-width: 200px;
+}
+
+.nhm-header-subbrand {
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--nhm-cyan);
+  margin: 0 0 2px 0;
+  font-weight: 500;
+}
+
+.nhm-header-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: 0.3px;
+}
+
+.nhm-header-description {
+  font-size: 11px;
+  color: var(--nhm-muted);
+  margin: 2px 0 0 0;
+}
+
+.nhm-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* ---------- Navbar overrides (navbarPage) ---------- */
+.navbar {
+  background-color: var(--nhm-purple) !important;
+  border-bottom: 1px solid var(--nhm-border) !important;
+  border-radius: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.navbar .navbar-brand {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+.navbar-default .navbar-nav > li > a,
+.navbar-default .navbar-nav > .active > a {
+  color: var(--nhm-text) !important;
+  background-color: transparent !important;
+  transition: color 0.2s, border-bottom 0.2s;
+  border-bottom: 2px solid transparent;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #ffffff !important;
+  border-bottom: 2px solid var(--nhm-cyan);
+}
+
+.navbar-default .navbar-nav > .active > a {
+  color: #ffffff !important;
+  border-bottom: 2px solid var(--nhm-cyan) !important;
+}
+
+/* ---------- Sidebar ---------- */
+.well {
+  background-color: var(--nhm-card) !important;
+  border: 1px solid var(--nhm-border) !important;
+  border-radius: var(--nhm-radius) !important;
+  color: var(--nhm-text) !important;
+  box-shadow: var(--nhm-shadow);
+}
+
+/* ---------- Panels / Cards ---------- */
+.nhm-card {
+  background-color: var(--nhm-card);
+  border: 1px solid var(--nhm-muted);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--nhm-shadow);
+  transition: border-color 0.2s, transform 0.15s;
+  position: relative;
+  overflow: visible;
+}
+
+.nhm-card:hover {
+  border-color: var(--nhm-cyan);
+  transform: translateY(-1px);
+}
+
+.nhm-card > *:not(.card-bg) {
+  position: relative;
+  z-index: 1;
+}
+
+.nhm-card h3, .nhm-card h4 {
+  color: #ffffff;
+  margin-top: 0;
+}
+
+.nhm-card p {
+  color: var(--nhm-muted);
+}
+
+/* Card background image overlay */
+.card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+/* Clip overflow only when a background image is present */
+.nhm-card:has(.card-bg) {
+  overflow: hidden;
+}
+
+/* ---------- bslib card overrides ---------- */
+.card, .bslib-card {
+  background-color: var(--nhm-card) !important;
+  border: 1px solid var(--nhm-border) !important;
+  border-radius: 20px !important;
+  color: var(--nhm-text) !important;
+  box-shadow: var(--nhm-shadow);
+}
+
+.card-header {
+  background-color: var(--nhm-purple) !important;
+  border-bottom: 1px solid var(--nhm-border) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* ---------- Tab panels ---------- */
+.nav-tabs {
+  border-bottom: 1px solid var(--nhm-border) !important;
+}
+
+.nav-tabs > li > a {
+  color: var(--nhm-muted) !important;
+  border: none !important;
+  transition: color 0.2s;
+}
+
+.nav-tabs > li > a:hover {
+  color: #ffffff !important;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  color: #ffffff !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid var(--nhm-cyan) !important;
+}
+
+.tab-content {
+  background-color: transparent !important;
+  padding-top: 16px;
+}
+
+/* ---------- Buttons ---------- */
+.btn-default {
+  background-color: var(--nhm-card) !important;
+  border: 1px solid var(--nhm-border) !important;
+  color: var(--nhm-text) !important;
+  border-radius: var(--nhm-radius) !important;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-default:hover, .btn-default:focus {
+  background-color: var(--nhm-card-hover) !important;
+  border-color: var(--nhm-cyan) !important;
+  color: #ffffff !important;
+}
+
+.btn-primary {
+  background-color: var(--nhm-cyan) !important;
+  border: 1px solid var(--nhm-cyan) !important;
+  color: var(--nhm-deep) !important;
+  border-radius: var(--nhm-radius) !important;
+  font-weight: 700;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: #fff !important;
+  border-color: #fff !important;
+  color: var(--nhm-deep) !important;
+}
+
+/* ---------- Form Controls ---------- */
+.form-control,
+.selectize-input {
+  background-color: var(--nhm-input) !important;
+  border: 1px solid var(--nhm-muted) !important;
+  color: var(--nhm-text) !important;
+  border-radius: 6px !important;
+}
+
+.selectize-dropdown {
+  background-color: var(--nhm-input) !important;
+  border: 1px solid var(--nhm-muted) !important;
+  color: var(--nhm-text) !important;
+  border-radius: 6px !important;
+  z-index: 10;
+}
+}
+
+.form-control:focus {
+  border-color: var(--nhm-cyan) !important;
+  outline: 2px solid var(--nhm-cyan) !important;
+  outline-offset: 1px;
+}
+
+.selectize-input.focus {
+  border-color: var(--nhm-cyan) !important;
+  outline: 2px solid var(--nhm-cyan) !important;
+  outline-offset: 1px;
+}
+
+.selectize-dropdown-content .option {
+  color: var(--nhm-text) !important;
+}
+
+.selectize-dropdown-content .option:hover,
+.selectize-dropdown-content .active {
+  background-color: var(--nhm-cyan) !important;
+  color: var(--nhm-deep) !important;
+}
+
+/* Ensure selectize wrapper sits above sibling controls */
+.form-group:has(.selectize-control) {
+  position: relative;
+  z-index: 10;
+}
+
+/* ---------- Slider inputs ---------- */
+.irs--shiny .irs-bar {
+  background: var(--nhm-cyan) !important;
+  border-color: var(--nhm-cyan) !important;
+}
+
+.irs--shiny .irs-handle {
+  background-color: var(--nhm-cyan) !important;
+  border-color: var(--nhm-deep) !important;
+}
+
+.irs--shiny .irs-line {
+  background-color: var(--nhm-border) !important;
+  border-color: var(--nhm-border) !important;
+}
+
+.irs--shiny .irs-min,
+.irs--shiny .irs-max,
+.irs--shiny .irs-single,
+.irs--shiny .irs-from,
+.irs--shiny .irs-to {
+  background-color: var(--nhm-purple) !important;
+  color: var(--nhm-text) !important;
+}
+
+/* ---------- Labels ---------- */
+label, .control-label {
+  color: var(--nhm-muted) !important;
+  font-weight: 500;
+}
+
+/* ---------- Tables ---------- */
+.table {
+  color: var(--nhm-text) !important;
+}
+
+.table > thead > tr > th {
+  border-bottom: 2px solid var(--nhm-border) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+.table > tbody > tr > td {
+  border-top: 1px solid var(--nhm-border) !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: var(--nhm-card) !important;
+}
+
+.table-hover > tbody > tr:hover {
+  background-color: var(--nhm-card-hover) !important;
+}
+
+/* ---------- DataTables ---------- */
+.dataTables_wrapper {
+  color: var(--nhm-text) !important;
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+  color: var(--nhm-muted) !important;
+}
+
+table.dataTable thead th {
+  border-bottom-color: var(--nhm-border) !important;
+}
+
+table.dataTable tbody tr {
+  background-color: var(--nhm-card) !important;
+  color: var(--nhm-text) !important;
+}
+
+table.dataTable tbody tr:hover {
+  background-color: var(--nhm-card-hover) !important;
+}
+
+table.dataTable tbody tr.odd {
+  background-color: var(--nhm-deep) !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  color: var(--nhm-text) !important;
+  border-color: var(--nhm-border) !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  background: var(--nhm-cyan) !important;
+  border-color: var(--nhm-cyan) !important;
+  color: var(--nhm-deep) !important;
+}
+
+/* ---------- Value boxes ---------- */
+.nhm-value-box {
+  background: var(--nhm-purple);
+  border: 1px solid var(--nhm-border);
+  border-left: 4px solid var(--nhm-cyan);
+  border-radius: var(--nhm-radius);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.nhm-value-box .nhm-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.nhm-value-box .nhm-value-label {
+  font-size: 0.8rem;
+  color: var(--nhm-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* ---------- Plotly / Plot overrides ---------- */
+.js-plotly-plot .plotly .main-svg {
+  background: transparent !important;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--nhm-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--nhm-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--nhm-muted);
+}
+
+/* ---------- Container spacing ---------- */
+.container-fluid {
+  padding: 20px 24px !important;
+}
+
+/* ---------- Headings ---------- */
+h1, h2, h3, h4, h5, h6 {
+  color: #ffffff;
+}
+
+h1 { font-weight: 700; }
+h2 { font-weight: 600; }
+h3 { font-weight: 600; }
+
+/* ---------- Links ---------- */
+a {
+  color: var(--nhm-cyan);
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* ---------- Horizontal rules ---------- */
+hr {
+  border-color: var(--nhm-border);
+}
+
+/* ---------- Modal ---------- */
+.modal-content {
+  background-color: var(--nhm-card) !important;
+  border: 1px solid var(--nhm-border) !important;
+  color: var(--nhm-text) !important;
+  border-radius: var(--nhm-radius) !important;
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--nhm-border) !important;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--nhm-border) !important;
+}
+
+.modal-header .close {
+  color: var(--nhm-text) !important;
+}
+
+/* ---------- Progress bars ---------- */
+.progress {
+  background-color: var(--nhm-deep) !important;
+  border-radius: var(--nhm-radius) !important;
+}
+
+.progress-bar {
+  background-color: var(--nhm-cyan) !important;
+}
+
+/* ---------- Notification / Alert ---------- */
+.shiny-notification {
+  background-color: var(--nhm-card) !important;
+  border: 1px solid var(--nhm-border) !important;
+  color: var(--nhm-text) !important;
+  border-radius: var(--nhm-radius) !important;
+}
+
+.shiny-notification .close {
+  color: var(--nhm-text) !important;
+}
+
+/* ---------- Validation errors ---------- */
+.shiny-output-error-validation {
+  color: var(--nhm-warning) !important;
+}
+
+/* ---------- Checkbox & Radio inputs ---------- */
+.checkbox label,
+.radio label,
+.checkbox-inline,
+.radio-inline {
+  color: var(--nhm-text);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--nhm-cyan);
+}
+
+/* ---------- Date picker ---------- */
+.datepicker {
+  background-color: var(--nhm-card) !important;
+  border: 1px solid var(--nhm-border) !important;
+  color: var(--nhm-text) !important;
+  border-radius: 8px !important;
+}
+
+.datepicker table tr td,
+.datepicker table tr th {
+  color: var(--nhm-text) !important;
+}
+
+.datepicker table tr td.active,
+.datepicker table tr td.active:hover,
+.datepicker table tr td.active.active {
+  background-color: var(--nhm-cyan) !important;
+  color: var(--nhm-deep) !important;
+}
+
+.datepicker table tr td:hover {
+  background-color: var(--nhm-card-hover) !important;
+}
+
+.datepicker table tr td.day.disabled {
+  color: var(--nhm-muted) !important;
+  opacity: 0.5;
+}
+
+.datepicker thead tr:first-child th:hover {
+  background-color: var(--nhm-card-hover) !important;
+}
+
+.datepicker .datepicker-switch,
+.datepicker .prev,
+.datepicker .next {
+  color: var(--nhm-text) !important;
+}
+
+/* ---------- File input ---------- */
+.btn-file {
+  background-color: var(--nhm-cyan) !important;
+  color: var(--nhm-deep) !important;
+  border: none !important;
+  font-weight: 600;
+}
+
+/* ---------- Well panel ---------- */
+.well {
+  background-color: var(--nhm-card) !important;
+  border: 1px solid var(--nhm-border) !important;
+  color: var(--nhm-text) !important;
+  box-shadow: var(--nhm-shadow);
+  border-radius: var(--nhm-radius) !important;
+}
+
+/* ---------- Focus outlines (accessibility) ---------- */
+.nhm-flipbook-btn:focus-visible,
+.nhm-flipbook-dot:focus-visible,
+.nhm-slide-tab:focus-visible,
+.nhm-flip-card:focus-visible {
+  outline: 2px solid var(--nhm-cyan);
+  outline-offset: 2px;
+}
+
+.nav-tabs > li > a:focus-visible {
+  outline: 2px solid var(--nhm-cyan);
+  outline-offset: 2px;
+}
+
+/* ---------- Skip navigation ---------- */
+.nhm-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 9999;
+  padding: 8px 16px;
+  background: var(--nhm-cyan);
+  color: var(--nhm-deep);
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 0 0 8px 0;
+}
+
+.nhm-skip-link:focus {
+  left: 0;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .nhm-flip-card-inner { transition: none !important; }
+  .nhm-flipbook-page { animation: none !important; }
+  .nhm-slide-panel,
+  .nhm-slide-tab { transition: none !important; }
+  .nhm-card { transition: none !important; }
+  .nhm-flipbook-dot { transition: none !important; }
+}
+
+/* ---------- Footer ---------- */
+/* When flipbook is active, footer is replaced by flipbook-nav */
+.nhm-flipbook-active .nhm-footer {
+  display: none;
+}
+
+.nhm-footer {
+  background-color: var(--nhm-deep);
+  border-top: 1px solid var(--nhm-border);
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--nhm-muted);
+  letter-spacing: 0.5px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+/* Add bottom padding to body so content isn't hidden behind fixed footer/nav */
+body {
+  padding-bottom: 44px !important;
+}
+
+.nhm-flipbook-active body,
+body.nhm-flipbook-active {
+  padding-bottom: 70px !important;
+}
+
+/* ---------- Flipbook ---------- */
+@keyframes nhmFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.nhm-flipbook-page {
+  display: none;
+  animation: nhmFadeIn 0.35s ease;
+}
+
+.nhm-flipbook-page.active {
+  display: block;
+}
+
+.nhm-flipbook-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--nhm-deep);
+  border-top: 1px solid var(--nhm-border);
+  z-index: 100;
+}
+
+.nhm-flipbook-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nhm-flipbook-btn {
+  background: var(--nhm-purple);
+  border: 1px solid var(--nhm-border);
+  color: var(--nhm-cyan);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.nhm-flipbook-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.nhm-flipbook-btn:hover:not(:disabled) {
+  background: var(--nhm-cyan);
+  color: var(--nhm-deep);
+}
+
+.nhm-flipbook-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.nhm-flipbook-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--nhm-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  padding: 0;
+}
+
+.nhm-flipbook-dot.active {
+  background: var(--nhm-cyan);
+  transform: scale(1.3);
+}
+
+.nhm-flipbook-dot:hover {
+  background: var(--nhm-muted);
+}
+
+.nhm-flipbook-label {
+  font-size: 11px;
+  color: var(--nhm-muted);
+  min-width: 120px;
+  text-align: center;
+}
+
+/* ---------- Flip Cards ---------- */
+.nhm-flip-card {
+  perspective: 800px;
+  cursor: pointer;
+  height: 320px;
+}
+
+.nhm-flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s ease;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+.nhm-flip-card.flipped .nhm-flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.nhm-flip-card-front,
+.nhm-flip-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid var(--nhm-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.nhm-flip-card-front {
+  background: var(--nhm-purple);
+  overflow: hidden;
+}
+
+.nhm-flip-card-front > *:not(.card-bg) {
+  position: relative;
+  z-index: 1;
+}
+
+.nhm-flip-card-front h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.nhm-flip-card-front .box-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+}
+
+.nhm-flip-card-front .stat-highlight {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--nhm-cyan);
+  margin: auto 0 8px;
+}
+
+.nhm-flip-card-front .stat-caption {
+  font-size: 12px;
+  color: #e0d6c8;
+}
+
+.nhm-flip-card-front .flip-hint {
+  font-size: 10px;
+  color: var(--nhm-muted);
+  margin-top: auto;
+}
+
+.nhm-flip-card-back {
+  background: var(--nhm-card);
+  transform: rotateY(180deg);
+  overflow-y: auto;
+}
+
+.nhm-flip-card-back .box-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+}
+
+.nhm-flip-card-back p {
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--nhm-text);
+  margin-bottom: 8px;
+}
+
+.nhm-flip-card-back strong {
+  color: var(--nhm-cyan);
+}
+
+.nhm-flip-card-back ul {
+  font-size: 12px;
+  color: var(--nhm-muted);
+  padding-left: 16px;
+  line-height: 1.7;
+}
+
+.nhm-flip-card-back ul li {
+  margin-bottom: 4px;
+}
+
+.nhm-flip-card-back .flip-hint {
+  font-size: 10px;
+  color: var(--nhm-muted);
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .nhm-flip-card {
+    height: 360px;
+  }
+}
+
+/* ---------- Slide-out Panel ---------- */
+.nhm-slide-tab {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 998;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  background: var(--nhm-cyan);
+  color: var(--nhm-deep);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  padding: 16px 10px;
+  border-radius: 8px 0 0 8px;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: right 0.3s ease;
+  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.3);
+}
+
+.nhm-slide-tab:hover {
+  background: #fff;
+}
+
+.nhm-slide-tab.panel-open {
+  right: 420px;
+}
+
+.nhm-slide-panel {
+  position: fixed;
+  right: -420px;
+  top: 0;
+  width: 420px;
+  height: 100vh;
+  z-index: 999;
+  background: var(--nhm-card);
+  border-left: 2px solid var(--nhm-cyan);
+  overflow-y: auto;
+  transition: right 0.3s ease;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.4);
+  padding: 32px 24px;
+}
+
+.nhm-slide-panel.open {
+  right: 0;
+}
+
+.nhm-slide-panel h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.nhm-slide-panel p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--nhm-text);
+  margin-bottom: 12px;
+}
+
+.nhm-slide-panel strong {
+  color: var(--nhm-cyan);
+}
+
+@media (max-width: 480px) {
+  .nhm-slide-tab.panel-open {
+    right: 100vw;
+  }
+  .nhm-slide-panel {
+    width: 100vw;
+    right: -100vw;
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .nhm-header {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .nhm-header-logo {
+    height: 36px;
+  }
+
+  .nhm-header-title {
+    font-size: 1.1rem;
+  }
+
+  .container-fluid {
+    padding: 12px 12px !important;
+  }
+}
+
+/* ── Audio player ─────────────────────────────────────────── */
+.nhm-audio-player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--nhm-card);
+  border-radius: var(--nhm-radius);
+  font-family: var(--nhm-font);
+  color: var(--nhm-text);
+  user-select: none;
+  overflow: visible;
+  position: relative;
+}
+
+.nhm-audio-play {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--nhm-cyan);
+  color: var(--nhm-deep);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.nhm-audio-play:hover {
+  background: var(--nhm-lime);
+}
+
+.nhm-audio-time {
+  font-size: 0.85rem;
+  color: var(--nhm-muted);
+  white-space: nowrap;
+  min-width: 70px;
+  text-align: center;
+}
+
+.nhm-audio-seek {
+  flex: 1;
+  height: 26px;
+  position: relative;
+  cursor: pointer;
+  min-width: 60px;
+}
+.nhm-audio-seek::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 6px;
+  transform: translateY(-50%);
+  background: var(--nhm-border);
+  border-radius: 3px;
+}
+.nhm-audio-seek-fill {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 6px;
+  transform: translateY(-50%);
+  background: var(--nhm-cyan);
+  border-radius: 3px;
+  width: 0;
+  pointer-events: none;
+}
+.nhm-audio-seek-thumb {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  background: var(--nhm-cyan);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+
+.nhm-audio-vol-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--nhm-text);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.nhm-audio-vol-btn:hover {
+  color: var(--nhm-cyan);
+}
+
+.nhm-audio-vol {
+  width: 70px;
+  height: 26px;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.nhm-audio-vol::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 6px;
+  transform: translateY(-50%);
+  background: var(--nhm-border);
+  border-radius: 3px;
+}
+.nhm-audio-vol-fill {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 6px;
+  transform: translateY(-50%);
+  background: var(--nhm-cyan);
+  border-radius: 3px;
+  width: 80%;
+  pointer-events: none;
+}
+.nhm-audio-vol-thumb {
+  position: absolute;
+  top: 50%;
+  left: 80%;
+  width: 14px;
+  height: 14px;
+  background: var(--nhm-cyan);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Options menu */
+.nhm-audio-options {
+  position: relative;
+  flex-shrink: 0;
+}
+.nhm-audio-options-btn {
+  background: none;
+  border: none;
+  color: var(--nhm-muted);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.nhm-audio-options-btn:hover {
+  color: var(--nhm-text);
+}
+.nhm-audio-options-menu {
+  display: none;
+  position: absolute;
+  background: var(--nhm-purple);
+  border: 1px solid var(--nhm-border);
+  border-radius: 8px;
+  padding: 8px 0;
+  min-width: 160px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  z-index: 99999;
+}
+.nhm-audio-options-menu.open {
+  display: block;
+}
+.nhm-audio-download {
+  display: block;
+  padding: 6px 16px;
+  color: var(--nhm-text);
+  text-decoration: none;
+  font-size: 13px;
+}
+.nhm-audio-download:hover {
+  background: var(--nhm-card-hover);
+  color: #fff;
+  text-decoration: none;
+}
+.nhm-audio-speed {
+  padding: 6px 16px;
+  border-top: 1px solid var(--nhm-border);
+  margin-top: 4px;
+  padding-top: 10px;
+}
+.nhm-audio-speed > span {
+  font-size: 11px;
+  color: var(--nhm-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 6px;
+}
+.nhm-audio-speed-options {
+  display: flex;
+  gap: 4px;
+}
+.nhm-audio-speed-btn {
+  background: var(--nhm-card);
+  border: 1px solid var(--nhm-border);
+  color: var(--nhm-muted);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: var(--nhm-font);
+}
+.nhm-audio-speed-btn:hover {
+  border-color: var(--nhm-cyan);
+  color: var(--nhm-text);
+}
+.nhm-audio-speed-btn.active {
+  background: var(--nhm-cyan);
+  color: var(--nhm-deep);
+  border-color: var(--nhm-cyan);
+  font-weight: 700;
+}

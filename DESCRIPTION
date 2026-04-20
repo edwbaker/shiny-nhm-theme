@@ -1,0 +1,20 @@
+Package: shinynhm
+Title: NHM Shiny Theme
+Version: 0.2.0
+Authors@R: c(
+    person("Ed", "Baker", email = "ed@ebaker.me.uk",
+           role = c("aut", "cre")),
+    person("Natural History Museum", role = "cph")
+    )
+Description: Provides a dark, modern UI with the NHM logo and
+    configurable title text.
+License: file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote:  7.3.3
+Imports:
+    graphics,
+    shiny (>= 1.7.0),
+    htmltools
+Suggests:
+    bslib
