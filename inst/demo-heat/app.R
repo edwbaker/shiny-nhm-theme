@@ -61,6 +61,53 @@ dist_world <- round(bbox_mean_dist(wmo_stations$lat, wmo_stations$lon), 1)
 dist_uk    <- round(bbox_mean_dist(stations$lat, stations$lon), 1)
 dist_nhm   <- round(bbox_mean_dist(sensors$lat, sensors$lon) * 1000) # metres
 
+# ── Log-scale positions for distance visualisation ───────────
+log_x_min <- 15; log_x_max <- 205
+log_min <- 1; log_max <- 5.5  # log10(10m) to log10(~316km)
+log_ppd <- (log_x_max - log_x_min) / (log_max - log_min)
+log_pos <- function(m) log_x_min + (log10(m) - log_min) * log_ppd
+# Tick positions
+tk_10m   <- round(log_pos(10), 1)
+tk_100m  <- round(log_pos(100), 1)
+tk_1km   <- round(log_pos(1000), 1)
+tk_10km  <- round(log_pos(10000), 1)
+tk_100km <- round(log_pos(100000), 1)
+# Data positions
+xp_nhm   <- round(log_pos(dist_nhm), 1)
+xp_uk    <- round(log_pos(dist_uk * 1000), 1)
+xp_world <- round(log_pos(dist_world * 1000), 1)
+
+# ── Linear-scale positions for page 3 ───────────────────────────
+lin_x_min <- 30; lin_x_max <- 1170
+lin_max_km <- dist_world
+lin_ppk   <- (lin_x_max - lin_x_min) / lin_max_km  # px per km
+lp_nhm    <- round(lin_x_min + (dist_nhm / 1000) * lin_ppk, 1)
+lp_uk     <- round(lin_x_min + dist_uk * lin_ppk, 1)
+lp_world  <- round(lin_x_min + dist_world * lin_ppk, 1)
+# Tick positions (linear)
+lt_50km   <- round(lin_x_min + 50 * lin_ppk, 1)
+lt_100km  <- round(lin_x_min + 100 * lin_ppk, 1)
+lt_200km  <- round(lin_x_min + 200 * lin_ppk, 1)
+lp_end    <- round(lin_x_min + lin_max_km * lin_ppk, 1)
+
+# ── UI helpers ──────────────────────────────────────────────────
+# Wrap repeated scattermapbox trace construction
+add_map_trace <- function(p, data, text, colour, size, opacity,
+                          visible = TRUE) {
+  plotly::add_trace(p,
+    type       = "scattermapbox",
+    mode       = "markers",
+    data       = data,
+    lat        = ~lat,
+    lon        = ~lon,
+    marker     = list(size = size, color = colour, opacity = opacity),
+    text       = text,
+    hoverinfo  = "text",
+    visible    = visible,
+    showlegend = FALSE
+  )
+}
+
 # ── UI ──────────────────────────────────────────────────────────
 ui <- nhm_page(
   title       = "World Cities Heat Projections",
@@ -136,7 +183,7 @@ ui <- nhm_page(
 
     # ── Page 2: Fly to London ─────────────────────────────────
     nhm_flipbook_page(
-      title = "Fly to NHM",
+      title = "Scales of measurement",
       shiny::fluidRow(
         shiny::column(
           3,
@@ -190,38 +237,100 @@ ui <- nhm_page(
           ),
           nhm_panel(
             title = "Mean Distance Between Devices",
-            shiny::tags$div(
-              style = "margin-bottom:10px;",
-              shiny::tags$p(class = "nhm-value-label", "WORLD"),
-              shiny::tags$p(
-                style = paste0(
-                  "font-size:1.5rem;font-weight:700;color:",
-                  cols$pink, ";margin:2px 0;"
-                ),
-                paste0(dist_world, " km")
-              )
-            ),
-            shiny::tags$div(
-              style = "margin-bottom:10px;",
-              shiny::tags$p(class = "nhm-value-label", "MET OFFICE"),
-              shiny::tags$p(
-                style = paste0(
-                  "font-size:1.5rem;font-weight:700;color:",
-                  cols$cyan, ";margin:2px 0;"
-                ),
-                paste0(dist_uk, " km")
-              )
-            ),
-            shiny::tags$div(
-              shiny::tags$p(class = "nhm-value-label", "NHM SENSORS"),
-              shiny::tags$p(
-                style = paste0(
-                  "font-size:1.5rem;font-weight:700;color:",
-                  cols$lime, ";margin:2px 0;"
-                ),
-                paste0(dist_nhm, " m")
-              )
-            )
+            shiny::HTML(sprintf('
+              <svg viewBox="0 0 220 115" width="100%%"
+                   xmlns="http://www.w3.org/2000/svg"
+                   style="display:block;margin:0 auto;">
+                <!-- Scale bar line -->
+                <line x1="%s" y1="55" x2="%s" y2="55"
+                  stroke="white" stroke-width="1" opacity="0.2"/>
+                <!-- Major ticks: 10m, 10km, 100km -->
+                <line x1="%s" y1="49" x2="%s" y2="61"
+                  stroke="white" stroke-width="1" opacity="0.35"/>
+                <text x="%s" y="73" fill="white"
+                  font-family="sans-serif" font-size="8"
+                  text-anchor="middle" opacity="0.5">10 m</text>
+                <line x1="%s" y1="49" x2="%s" y2="61"
+                  stroke="white" stroke-width="1" opacity="0.35"/>
+                <text x="%s" y="73" fill="white"
+                  font-family="sans-serif" font-size="8"
+                  text-anchor="middle" opacity="0.5">10 km</text>
+                <line x1="%s" y1="49" x2="%s" y2="61"
+                  stroke="white" stroke-width="1" opacity="0.35"/>
+                <text x="%s" y="73" fill="white"
+                  font-family="sans-serif" font-size="8"
+                  text-anchor="middle" opacity="0.5">100 km</text>
+                <!-- Minor ticks: 100m, 1km -->
+                <line x1="%s" y1="51" x2="%s" y2="59"
+                  stroke="white" stroke-width="0.7" opacity="0.2"/>
+                <text x="%s" y="73" fill="white"
+                  font-family="sans-serif" font-size="7"
+                  text-anchor="middle" opacity="0.35">100 m</text>
+                <line x1="%s" y1="51" x2="%s" y2="59"
+                  stroke="white" stroke-width="0.7" opacity="0.2"/>
+                <text x="%s" y="73" fill="white"
+                  font-family="sans-serif" font-size="7"
+                  text-anchor="middle" opacity="0.35">1 km</text>
+                <!-- NHM marker -->
+                <line x1="%s" y1="34" x2="%s" y2="50"
+                  stroke="%s" stroke-width="1.5" opacity="0.5"/>
+                <circle cx="%s" cy="55" r="5"
+                  fill="%s" fill-opacity="0.85"
+                  stroke="%s" stroke-width="1.5"/>
+                <text x="%s" y="26" fill="%s"
+                  font-family="sans-serif" font-size="10"
+                  font-weight="700" text-anchor="middle">NHM</text>
+                <text x="%s" y="16" fill="%s"
+                  font-family="sans-serif" font-size="9"
+                  font-weight="600" text-anchor="middle">%s m</text>
+                <!-- Met Office marker (label below) -->
+                <line x1="%s" y1="60" x2="%s" y2="76"
+                  stroke="%s" stroke-width="1.5" opacity="0.5"/>
+                <circle cx="%s" cy="55" r="5"
+                  fill="%s" fill-opacity="0.85"
+                  stroke="%s" stroke-width="1.5"/>
+                <text x="%s" y="88" fill="%s"
+                  font-family="sans-serif" font-size="10"
+                  font-weight="700" text-anchor="middle">Met Office</text>
+                <text x="%s" y="98" fill="%s"
+                  font-family="sans-serif" font-size="9"
+                  font-weight="600" text-anchor="middle">%s km</text>
+                <!-- World marker -->
+                <line x1="%s" y1="34" x2="%s" y2="50"
+                  stroke="%s" stroke-width="1.5" opacity="0.5"/>
+                <circle cx="%s" cy="55" r="5"
+                  fill="%s" fill-opacity="0.85"
+                  stroke="%s" stroke-width="1.5"/>
+                <text x="%s" y="26" fill="%s"
+                  font-family="sans-serif" font-size="10"
+                  font-weight="700" text-anchor="end">World</text>
+                <text x="%s" y="16" fill="%s"
+                  font-family="sans-serif" font-size="9"
+                  font-weight="600" text-anchor="end">%s km</text>
+                <!-- Scale annotation -->
+                <text x="110" y="112" fill="white"
+                  font-family="sans-serif" font-size="7.5"
+                  text-anchor="middle" opacity="0.35">logarithmic scale</text>
+              </svg>',
+              log_x_min, log_x_max,
+              tk_10m, tk_10m, tk_10m,
+              tk_10km, tk_10km, tk_10km,
+              tk_100km, tk_100km, tk_100km,
+              tk_100m, tk_100m, tk_100m,
+              tk_1km, tk_1km, tk_1km,
+              xp_nhm, xp_nhm, cols$lime,
+              xp_nhm, cols$lime, cols$lime,
+              xp_nhm, cols$lime,
+              xp_nhm, cols$lime, dist_nhm,
+              xp_uk, xp_uk, cols$cyan,
+              xp_uk, cols$cyan, cols$cyan,
+              xp_uk, cols$cyan,
+              xp_uk, cols$cyan, dist_uk,
+              xp_world, xp_world, cols$pink,
+              xp_world, cols$pink, cols$pink,
+              xp_world, cols$pink,
+              xp_world, cols$pink, dist_world
+            ))
           )
         ),
         shiny::column(
@@ -229,6 +338,113 @@ ui <- nhm_page(
           nhm_panel(
             title = "Map",
             plotly::plotlyOutput("fly_map", height = "650px")
+          )
+        )
+      )
+    ),
+
+    # ── Page 3: Linear distance scale ──────────────────────────
+    nhm_flipbook_page(
+      title = "Linear Scale",
+      shiny::fluidRow(
+        shiny::column(
+          12,
+          nhm_panel(
+            title = "Mean Distance Between Devices (linear scale)",
+            shiny::HTML(sprintf('
+              <svg viewBox="0 0 1200 160" width="100%%"
+                   xmlns="http://www.w3.org/2000/svg"
+                   style="display:block;margin:0 auto;">
+                <!-- Scale bar line -->
+                <line x1="%s" y1="75" x2="%s" y2="75"
+                  stroke="white" stroke-width="1.5" opacity="0.2"/>
+                <!-- 0 km tick -->
+                <line x1="%s" y1="67" x2="%s" y2="83"
+                  stroke="white" stroke-width="1" opacity="0.4"/>
+                <text x="%s" y="96" fill="white"
+                  font-family="sans-serif" font-size="11"
+                  text-anchor="middle" opacity="0.5">0</text>
+                <!-- 50 km tick -->
+                <line x1="%s" y1="69" x2="%s" y2="81"
+                  stroke="white" stroke-width="0.8" opacity="0.25"/>
+                <text x="%s" y="96" fill="white"
+                  font-family="sans-serif" font-size="10"
+                  text-anchor="middle" opacity="0.35">50 km</text>
+                <!-- 100 km tick -->
+                <line x1="%s" y1="67" x2="%s" y2="83"
+                  stroke="white" stroke-width="1" opacity="0.4"/>
+                <text x="%s" y="96" fill="white"
+                  font-family="sans-serif" font-size="11"
+                  text-anchor="middle" opacity="0.5">100 km</text>
+                <!-- 200 km tick -->
+                <line x1="%s" y1="67" x2="%s" y2="83"
+                  stroke="white" stroke-width="1" opacity="0.4"/>
+                <text x="%s" y="96" fill="white"
+                  font-family="sans-serif" font-size="11"
+                  text-anchor="middle" opacity="0.5">200 km</text>
+                <!-- End tick -->
+                <line x1="%s" y1="67" x2="%s" y2="83"
+                  stroke="white" stroke-width="1" opacity="0.4"/>
+                <!-- NHM marker (essentially at zero) -->
+                <line x1="%s" y1="48" x2="%s" y2="70"
+                  stroke="%s" stroke-width="2" opacity="0.6"/>
+                <circle cx="%s" cy="75" r="7"
+                  fill="%s" fill-opacity="0.85"
+                  stroke="%s" stroke-width="2"/>
+                <text x="%s" y="38" fill="%s"
+                  font-family="sans-serif" font-size="14"
+                  font-weight="700" text-anchor="start">NHM</text>
+                <text x="%s" y="24" fill="%s"
+                  font-family="sans-serif" font-size="12"
+                  font-weight="600" text-anchor="start">%s m</text>
+                <!-- Met Office marker (below line) -->
+                <line x1="%s" y1="80" x2="%s" y2="106"
+                  stroke="%s" stroke-width="2" opacity="0.6"/>
+                <circle cx="%s" cy="75" r="7"
+                  fill="%s" fill-opacity="0.85"
+                  stroke="%s" stroke-width="2"/>
+                <text x="%s" y="120" fill="%s"
+                  font-family="sans-serif" font-size="14"
+                  font-weight="700" text-anchor="middle">Met Office</text>
+                <text x="%s" y="134" fill="%s"
+                  font-family="sans-serif" font-size="12"
+                  font-weight="600" text-anchor="middle">%s km</text>
+                <!-- World marker -->
+                <line x1="%s" y1="48" x2="%s" y2="70"
+                  stroke="%s" stroke-width="2" opacity="0.6"/>
+                <circle cx="%s" cy="75" r="7"
+                  fill="%s" fill-opacity="0.85"
+                  stroke="%s" stroke-width="2"/>
+                <text x="%s" y="38" fill="%s"
+                  font-family="sans-serif" font-size="14"
+                  font-weight="700" text-anchor="end">World</text>
+                <text x="%s" y="24" fill="%s"
+                  font-family="sans-serif" font-size="12"
+                  font-weight="600" text-anchor="end">%s km</text>
+                <!-- Scale annotation -->
+                <text x="600" y="155" fill="white"
+                  font-family="sans-serif" font-size="10"
+                  text-anchor="middle" opacity="0.35">linear scale</text>
+              </svg>',
+              lin_x_min, lin_x_max,
+              lin_x_min, lin_x_min, lin_x_min,
+              lt_50km, lt_50km, lt_50km,
+              lt_100km, lt_100km, lt_100km,
+              lt_200km, lt_200km, lt_200km,
+              lp_end, lp_end,
+              lp_nhm, lp_nhm, cols$lime,
+              lp_nhm, cols$lime, cols$lime,
+              lp_nhm, cols$lime,
+              lp_nhm, cols$lime, dist_nhm,
+              lp_uk, lp_uk, cols$cyan,
+              lp_uk, cols$cyan, cols$cyan,
+              lp_uk, cols$cyan,
+              lp_uk, cols$cyan, dist_uk,
+              lp_world, lp_world, cols$pink,
+              lp_world, cols$pink, cols$pink,
+              lp_world, cols$pink,
+              lp_world, cols$pink, dist_world
+            ))
           )
         )
       )
@@ -252,56 +468,50 @@ server <- function(input, output, session) {
   output$heat_map <- plotly::renderPlotly({
     df <- year_data()
 
+    common <- list(
+      palette       = palette,
+      data          = df,
+      lat           = ~lat,
+      lon           = ~lon,
+      show_colorbar = TRUE,
+      marker_size   = 6,
+      hover_size    = 14
+    )
+
     if (is_change()) {
-      nhm_world_map(
-        palette       = palette,
-        data          = df,
-        lat           = ~lat,
-        lon           = ~lon,
-        marker_values = ~temp_change,
-        colour_limits = range(heat$temp_change, na.rm = TRUE),
-        ramp_colours  = c("#2166AC", "#67A9CF", "#F7F7F7",
+      do.call(nhm_world_map, c(common, list(
+        marker_values  = ~temp_change,
+        colour_limits  = range(heat$temp_change, na.rm = TRUE),
+        ramp_colours   = c("#2166AC", "#67A9CF", "#F7F7F7",
                            "#EF8A62", "#B2182B", "#67001F"),
-        show_colorbar  = TRUE,
         colorbar_title = "Change (\u00b0C)",
-        marker_size   = 6,
-        hover_size    = 14,
-        label         = ~paste0(city_name, ": ",
-                                ifelse(temp_change >= 0, "+", ""),
-                                round(temp_change, 1),
-                                "\u00b0C"),
-        customdata    = ~paste0(
+        label          = ~paste0(city_name, ": ",
+                                 ifelse(temp_change >= 0, "+", ""),
+                                 round(temp_change, 1), "\u00b0C"),
+        customdata     = ~paste0(
           "<b>", city_name, "</b>",
           "<br>Country: ", country,
           "<br>Change: ", ifelse(temp_change >= 0, "+", ""),
           round(temp_change, 1), "\u00b0C",
           "<br>Year: ", year
         )
-      )
+      )))
     } else {
-      nhm_world_map(
-        palette       = palette,
-        data          = df,
-        lat           = ~lat,
-        lon           = ~lon,
-        marker_values = ~hottest_3mo_tasmax_c,
-        colour_limits = range(heat$hottest_3mo_tasmax_c, na.rm = TRUE),
-        ramp_colours  = c("#2166AC", "#67A9CF", "#FDDBC7",
+      do.call(nhm_world_map, c(common, list(
+        marker_values  = ~hottest_3mo_tasmax_c,
+        colour_limits  = range(heat$hottest_3mo_tasmax_c, na.rm = TRUE),
+        ramp_colours   = c("#2166AC", "#67A9CF", "#FDDBC7",
                            "#EF8A62", "#B2182B", "#67001F"),
-        show_colorbar  = TRUE,
         colorbar_title = "\u00b0C",
-        marker_size   = 6,
-        hover_size    = 14,
-        label         = ~paste0(city_name, ": ",
-                                round(hottest_3mo_tasmax_c, 1),
-                                "\u00b0C"),
-        customdata    = ~paste0(
+        label          = ~paste0(city_name, ": ",
+                                 round(hottest_3mo_tasmax_c, 1), "\u00b0C"),
+        customdata     = ~paste0(
           "<b>", city_name, "</b>",
           "<br>Country: ", country,
           "<br>Peak temp: ", round(hottest_3mo_tasmax_c, 1), "\u00b0C",
           "<br>Year: ", year
         )
-      )
+      )))
     }
   })
 
@@ -502,55 +712,22 @@ server <- function(input, output, session) {
   output$fly_map <- plotly::renderPlotly({
     p <- plotly::plot_ly() |>
       # Trace 0: Met Office stations (hidden initially)
-      plotly::add_trace(
-        type = "scattermapbox",
-        mode = "markers",
-        data = stations,
-        lat  = ~lat,
-        lon  = ~lon,
-        marker = list(
-          size    = 6,
-          color   = cols$cyan,
-          opacity = 0.8
-        ),
-        text = ~paste0(station_name, " (", type, ")"),
-        hoverinfo = "text",
-        visible = FALSE,
-        showlegend = FALSE
+      add_map_trace(stations,
+        text    = ~paste0(station_name, " (", type, ")"),
+        colour  = cols$cyan, size = 6, opacity = 0.8,
+        visible = FALSE
       ) |>
       # Trace 1: NHM sensors (hidden initially)
-      plotly::add_trace(
-        type = "scattermapbox",
-        mode = "markers",
-        data = sensors,
-        lat  = ~lat,
-        lon  = ~lon,
-        marker = list(
-          size    = 8,
-          color   = cols$lime,
-          opacity = 0.9
-        ),
-        text = ~sensor_name,
-        hoverinfo = "text",
-        visible = FALSE,
-        showlegend = FALSE
+      add_map_trace(sensors,
+        text    = ~sensor_name,
+        colour  = cols$lime, size = 8, opacity = 0.9,
+        visible = FALSE
       ) |>
       # Trace 2: WMO stations (visible initially — world view)
-      plotly::add_trace(
-        type = "scattermapbox",
-        mode = "markers",
-        data = wmo_stations,
-        lat  = ~lat,
-        lon  = ~lon,
-        marker = list(
-          size    = 3,
-          color   = cols$pink,
-          opacity = 0.6
-        ),
-        text = ~station_name,
-        hoverinfo = "text",
-        visible = TRUE,
-        showlegend = FALSE
+      add_map_trace(wmo_stations,
+        text    = ~station_name,
+        colour  = cols$pink, size = 3, opacity = 0.6,
+        visible = TRUE
       )
 
     nhm_plotly_layout(p,
@@ -564,70 +741,52 @@ server <- function(input, output, session) {
     )
   })
 
-  # Helper: toggle station visibility via plotly proxy
+  # Helper: toggle trace visibility via plotly proxy
   fly_proxy <- NULL
   shiny::observe({
     fly_proxy <<- plotly::plotlyProxy("fly_map", session)
   })
 
-  show_stations <- function(visible) {
-    plotly::plotlyProxyInvoke(
-      fly_proxy, "restyle",
-      list(visible = visible), list(0L)
-    )
+  make_show_fn <- function(idx) {
+    function(visible) {
+      plotly::plotlyProxyInvoke(fly_proxy, "restyle",
+        list(visible = visible), list(idx))
+    }
   }
+  show_stations <- make_show_fn(0L)
+  show_sensors  <- make_show_fn(1L)
+  show_wmo      <- make_show_fn(2L)
 
-  show_sensors <- function(visible) {
-    plotly::plotlyProxyInvoke(
-      fly_proxy, "restyle",
-      list(visible = visible), list(1L)
-    )
-  }
-
-  show_wmo <- function(visible) {
-    plotly::plotlyProxyInvoke(
-      fly_proxy, "restyle",
-      list(visible = visible), list(2L)
-    )
+  # Generic fly-to handler
+  do_fly_to <- function(view_name, lat, lon, zoom, show_fn, hide_fns) {
+    fly_view(view_name)
+    show_fn(TRUE)
+    nhm_map_flyto(session, "fly_map", lat = lat, lon = lon, zoom = zoom,
+                  duration = 3500)
+    later::later(function() {
+      for (f in hide_fns) f(FALSE)
+    }, delay = 3.5)
   }
 
   # World view
   shiny::observeEvent(input$fly_world, {
-    fly_view("World")
-    show_wmo(TRUE)
-    nhm_map_flyto(session, "fly_map",
-                  lat = 20, lon = 0, zoom = 1,
-                  duration = 3500)
-    later::later(function() {
-      show_stations(FALSE)
-      show_sensors(FALSE)
-    }, delay = 3.5)
+    do_fly_to("World", lat = 20, lon = 0, zoom = 1,
+              show_fn   = show_wmo,
+              hide_fns  = list(show_stations, show_sensors))
   })
 
   # UK view
   shiny::observeEvent(input$fly_uk, {
-    fly_view("Met Office Stations")
-    show_stations(TRUE)
-    nhm_map_flyto(session, "fly_map",
-                  lat = 54.5, lon = -3, zoom = 4.8,
-                  duration = 3500)
-    later::later(function() {
-      show_sensors(FALSE)
-      show_wmo(FALSE)
-    }, delay = 3.5)
+    do_fly_to("Met Office Stations", lat = 54.5, lon = -3, zoom = 4.8,
+              show_fn   = show_stations,
+              hide_fns  = list(show_sensors, show_wmo))
   })
 
   # NHM view
   shiny::observeEvent(input$fly_nhm, {
-    fly_view("Urban Research Station")
-    show_sensors(TRUE)
-    nhm_map_flyto(session, "fly_map",
-                  lat = 51.4965, lon = -0.1764, zoom = 17,
-                  duration = 3500)
-    later::later(function() {
-      show_stations(FALSE)
-      show_wmo(FALSE)
-    }, delay = 3.5)
+    do_fly_to("Urban Research Station", lat = 51.4965, lon = -0.1764, zoom = 17,
+              show_fn   = show_sensors,
+              hide_fns  = list(show_stations, show_wmo))
   })
 
   # London data for info panel
