@@ -31,7 +31,7 @@ nhm_map_flythrough(
 \item{lon}{Target longitude.}
 
 \item{zoom}{Final projection scale. Higher values = more zoomed in.
-Typical values: 3 continent, 8 country, 25 city, 80\u2013150
+Typical values: 3 continent, 8 country, 25 city, 80–150
 building/street level.}
 
 \item{stages}{Number of intermediate zoom stages (default 5).

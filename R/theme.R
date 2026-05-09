@@ -12,6 +12,7 @@ nhm_theme <- function() {
     version = "0.1.0",
     src     = system.file("www", package = "shinynhm"),
     stylesheet = "css/nhm-theme.css",
+    script = "js/nhm-selectize.js",
     all_files  = TRUE
   )
 }

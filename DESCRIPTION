@@ -20,4 +20,8 @@ Suggests:
     bslib,
     ggplot2,
     htmlwidgets,
-    plotly
+    plotly,
+    rnaturalearth,
+    rnaturalearthhires,
+    schite,
+    sf

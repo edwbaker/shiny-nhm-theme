@@ -11,7 +11,7 @@
 #' @param lon Target longitude.
 #' @param zoom Projection scale (1 = whole globe, higher = more zoomed).
 #'   Typical values: 1 for global, 3 for continent, 6 for country,
-#'   15\u201325 for city.
+#'   15–25 for city.
 #' @param duration Animation duration in milliseconds. Default 1500.
 #' @param geo_features Optional named list of geo layout properties to
 #'   apply at the destination (e.g.
@@ -71,7 +71,7 @@ nhm_map_reset <- function(session, outputId, duration = 1200) {
 #' @param lat Target latitude.
 #' @param lon Target longitude.
 #' @param zoom Final projection scale. Higher values = more zoomed in.
-#'   Typical values: 3 continent, 8 country, 25 city, 80\u2013150
+#'   Typical values: 3 continent, 8 country, 25 city, 80–150
 #'   building/street level.
 #' @param stages Number of intermediate zoom stages (default 5).
 #'   More stages = smoother but slower journey.

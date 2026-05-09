@@ -211,7 +211,7 @@ nhm_world_map <- function(palette = "default",
     projection      = list(type = projection)
   )
 
-  p <- plotly::plot_ly()
+  p <- plotly::plot_ly(type = "scattergeo")
 
   drag <- if (allow_zoom) "zoom" else FALSE
 

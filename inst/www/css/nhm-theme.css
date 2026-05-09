@@ -155,7 +155,6 @@ html, body {
 
 .nhm-card > *:not(.card-bg) {
   position: relative;
-  z-index: 1;
 }
 
 .nhm-card h3, .nhm-card h4 {
@@ -276,6 +275,11 @@ html, body {
   z-index: 9999 !important;
 }
 
+/* Portaled selectize menus (attached to body) must still overlay controls */
+body > .selectize-dropdown {
+  z-index: 200000 !important;
+}
+
 .form-control:focus {
   border-color: var(--nhm-cyan) !important;
   outline: 2px solid var(--nhm-cyan) !important;
@@ -298,11 +302,7 @@ html, body {
   color: var(--nhm-deep) !important;
 }
 
-/* Ensure selectize wrapper does not trap dropdown stacking context */
-.form-group:has(.selectize-control) {
-  position: relative;
-}
-
+/* Keep selectize controls above sibling widgets (e.g. sliders) inside panels */
 /* ---------- Slider inputs ---------- */
 .irs--shiny .irs-bar {
   background: var(--nhm-cyan) !important;

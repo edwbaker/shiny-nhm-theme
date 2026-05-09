@@ -26,7 +26,7 @@ nhm_map_flyto(
 
 \item{zoom}{Projection scale (1 = whole globe, higher = more zoomed).
 Typical values: 1 for global, 3 for continent, 6 for country,
-15\u201325 for city.}
+15–25 for city.}
 
 \item{duration}{Animation duration in milliseconds. Default 1500.}
 
